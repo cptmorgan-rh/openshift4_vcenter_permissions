@@ -17,20 +17,20 @@
     - folder_exists.rc != 0
     - vcenter.create_folder == True
 
-- name: Apply openshift-vcenter-level role to vCenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter-level -propagate=false /"
+- name: Apply openshift-vcenter_level role to vCenter
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter_level -propagate=false /"
 
 - name: Apply ReadyOnly role to vCenter Datacenter
   command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role ReadOnly -propagate=false /{{ vcenter.datacenter }}"
 
-- name: Apply openshift-cluster-level role to vCenter Cluster
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster-level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
+- name: Apply openshift-cluster_level role to vCenter Cluster
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster_level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
 
-- name: Apply openshift-datastore-level role to vCenter Datastore
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore-level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
+- name: Apply openshift-datastore_level role to vCenter Datastore
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore_level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
 
-- name: Apply openshift-portgroup-level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup-level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
+- name: Apply openshift-portgroup_level role to vCenter PortGroup
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup_level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
 
-- name: Apply openshift-folder-level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-folder-level -propagate=true /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
+- name: Apply openshift-folder_level role to vCenter PortGroup
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-folder_level -propagate=true /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"

@@ -4,6 +4,8 @@ OpenShift 4 Minimum vCenter Permissions
 ## Description
 ------------
 
+**Note: This branch uses govc to create and set the roles. Please switch to the ansible_module branch for the playbook that uses the vmware Ansible Modules.**
+
 The ansible playbook in this repository will create and apply the required roles for the minimum permissions required to deploy OpenShift 4 on vCenter. This has been tested with the IPI and UPI methods.
 
 The permissions are obtained from the Official OpenShift Installer Docs on GitHub.
