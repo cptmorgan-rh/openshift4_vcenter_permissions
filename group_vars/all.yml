@@ -1,15 +1,13 @@
 vcenter:
-  ip: 192.168.50.11
+  ip: 10.0.0.10
   admin_username: administrator@vsphere.local
   admin_password: Password1!
-  datacenter: LAB
+  datacenter: dc0
   cluster: LAB
-  datastore: 840Pro
-  network: 192.168.50.x-24
+  datastore: ds0
+  network: 10.0.0.x-24
   folder: openshift4
   create_folder: True
-download:
-  govc: https://github.com/vmware/govmomi/releases/download/v0.24.0/govc_linux_amd64.gz
 openshift:
   vcenter_svc_account: OCP4Admin@vsphere.local
   installer_created_folder: False
