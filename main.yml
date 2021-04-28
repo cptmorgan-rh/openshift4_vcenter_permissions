@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  gather_facts: False
+  environment:
+    PATH: "{{ playbook_dir }}/bin:{{ ansible_env.PATH }}"
+    GOVC_USERNAME: "{{ vcenter.admin_username }}"
+    GOVC_PASSWORD: "{{ vcenter.admin_password }}"
+    GOVC_URL: "https://{{ vcenter.ip }}"
+    GOVC_DATACENTER: "{{ vcenter.datacenter }}"
+    GOVC_INSECURE: 1
+
+  tasks:
+    - name: Download and extract govc
+      import_role:
+        name: download_govc
+
+    - name: Create OCP 4 vCenter Role
+      import_role:
+        name: create_ocp4_vcenter_role
+
+    - name: Apply OCP 4 vCenter Permissions for precreated VM Folder
+      import_role:
+        name: apply_roles_precreated_folder
+      when: openshift.installer_created_folder == False
+
+    - name: Apply OCP 4 vCenter Permissions for installer created VM Folder
+      import_role:
+        name: apply_roles_installer_created_folder
+      when: openshift.installer_created_folder == True

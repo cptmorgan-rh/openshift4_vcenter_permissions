@@ -1,0 +1,88 @@
+---
+- name: Check if openshift-vcenter-level role exists
+  command: "govc role.ls openshift-vcenter-level"
+  register: result_vcenter_level
+  ignore_errors: yes
+
+- name: Create openshift-vcenter-level role
+  command: "govc role.create openshift-vcenter-level"
+  when: result_vcenter_level.rc != 0
+  ignore_errors: yes
+
+- name: Add Privilege to openshift-vcenter-level role
+  command: "govc role.update -a openshift-vcenter-level {{ item }}"
+  with_items: "{{ vcenter_level }}"
+
+- name: Check if openshift-cluster-level role exists
+  command: "govc role.ls openshift-cluster-level"
+  register: result_cluster_level
+  ignore_errors: yes
+
+- name: Create openshift-cluster-level role
+  command: "govc role.create openshift-cluster-level"
+  when: result_cluster_level.rc != 0
+
+- name: Add Privilege to openshift-cluster-level role
+  command: "govc role.update -a openshift-cluster-level {{ item }}"
+  with_items: "{{ cluster_level }}"
+
+- name: Check if openshift-datastore-level role exists
+  command: "govc role.ls openshift-datastore-level"
+  register: result_datastore_level
+  ignore_errors: yes
+
+- name: Create openshift-datastore-level role
+  command: "govc role.create openshift-datastore-level"
+  when: result_datastore_level.rc != 0
+
+- name: Add Privilege to openshift-datastore-level role
+  command: "govc role.update -a openshift-datastore-level {{ item }}"
+  with_items: "{{ datastore_level }}"
+
+- name: Check if openshift-portgroup-level role exists
+  command: "govc role.ls openshift-portgroup-level"
+  register: result_portgroup_level
+  ignore_errors: yes
+
+- name: Create openshift-portgroup-level role
+  command: "govc role.create openshift-portgroup-level"
+  when: result_portgroup_level.rc != 0
+
+- name: Add Privilege to openshift-portgroup-level role
+  command: "govc role.update -a openshift-portgroup-level {{ item }}"
+  with_items: "{{ portgroup_level }}"
+
+- name: Check if openshift-folder-level role exists
+  command: "govc role.ls openshift-folder-level"
+  register: result_folder_level
+  when: openshift.installer_created_folder == False
+  ignore_errors: yes
+
+- name: Create openshift-folder-level role
+  command: "govc role.create openshift-folder-level"
+  when:
+    - openshift.installer_created_folder == False
+    - result_folder_level.rc != 0
+
+- name: Add Privilege to openshift-folder-level role
+  command: "govc role.update -a openshift-folder-level {{ item }}"
+  with_items: "{{ folder_level }}"
+  when: openshift.installer_created_folder == False
+
+- name: Check if openshift-datacenter-level role exists
+  command: "govc role.ls openshift-datacenter-level"
+  register: result_datacenter_level
+  ignore_errors: yes
+  when: openshift.installer_created_folder == True
+
+- name: Create openshift-datacenter-level role
+  command: "govc role.create openshift-datacenter-level"
+  when:
+    - openshift.installer_created_folder == True
+    - result_datacenter_level.rc != 0
+  ignore_errors: true
+
+- name: Add Privilege to openshift-datacenter-level role
+  command: "govc role.update -a openshift-datacenter-level {{ item }}"
+  with_items: "{{ datacenter_level }}"
+  when: openshift.installer_created_folder == True

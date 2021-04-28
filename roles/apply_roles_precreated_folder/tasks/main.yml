@@ -1,0 +1,36 @@
+---
+- name: Check if the "{{ vcenter.folder }}" folder already exists
+  command: "govc folder.info /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}" # noqa 301
+  register: folder_exists
+  ignore_errors: yes
+
+- name: Fail if Folder does not exist and create = False
+  fail:
+    msg: "Folder in vCenter does not exist. create_folder set to False. Please create folder in vCenter."
+  when:
+    - folder_exists.rc != 0
+    - vcenter.create_folder == False
+
+- name: Create "{{ vcenter.folder }}" in vCenter
+  command: "govc folder.create /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
+  when:
+    - folder_exists.rc != 0
+    - vcenter.create_folder == True
+
+- name: Apply openshift-vcenter-level role to vCenter
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter-level -propagate=false /"
+
+- name: Apply ReadyOnly role to vCenter Datacenter
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role ReadOnly -propagate=false /{{ vcenter.datacenter }}"
+
+- name: Apply openshift-cluster-level role to vCenter Cluster
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster-level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
+
+- name: Apply openshift-datastore-level role to vCenter Datastore
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore-level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
+
+- name: Apply openshift-portgroup-level role to vCenter PortGroup
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup-level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
+
+- name: Apply openshift-folder-level role to vCenter PortGroup
+  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-folder-level -propagate=true /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
