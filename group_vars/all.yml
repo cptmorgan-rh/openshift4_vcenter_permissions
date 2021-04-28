@@ -1,12 +1,12 @@
 vcenter:
-  ip: 10.0.0.10
+  ip: 192.168.50.11
   admin_username: administrator@vsphere.local
   admin_password: Password1!
-  datacenter: dc
+  datacenter: LAB
   cluster: LAB
-  datastore: ds0
-  network: 10.0.0.x-24
-  folder: openshift47
+  datastore: 840Pro
+  network: 192.168.50.x-24
+  folder: openshift4
   create_folder: True
 download:
   govc: https://github.com/vmware/govmomi/releases/download/v0.24.0/govc_linux_amd64.gz

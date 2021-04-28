@@ -1,15 +1,65 @@
 ---
-- name: Apply openshift-vcenter-level role to vCenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter-level -propagate=false /"
+- name: Apply openshift-vcenter_level role to vCenter
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-vcenter_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: rootFolder
+    object_type: Folder
+    state: present
+    recursive: no
 
 - name: Apply openshift-datacenter-level role to vCenter Datacenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datacenter-level -propagate=true /{{ vcenter.datacenter }}"
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-datacenter_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.datacenter }}"
+    object_type: Datacenter
+    state: present
+    recursive: yes
 
-- name: Apply openshift-cluster-level role to vCenter Cluster
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster-level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
+- name: Apply openshift-cluster_level role to vCenter Cluster
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-cluster_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.cluster }}"
+    object_type: ClusterComputeResource
+    state: present
+    recursive: yes
 
-- name: Apply openshift-datastore-level role to vCenter Datastore
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore-level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
+- name: Apply openshift-datastore_level role to vCenter Datastore
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-datastore_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.datastore }}"
+    object_type: Datastore
+    state: present
+    recursive: no
 
-- name: Apply openshift-portgroup-level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup-level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
+- name: Apply openshift-portgroup_level role to vCenter PortGroup
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-portgroup_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.network }}"
+    object_type: Network
+    state: present
+    recursive: no

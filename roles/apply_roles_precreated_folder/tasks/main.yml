@@ -1,36 +1,108 @@
 ---
-- name: Check if the "{{ vcenter.folder }}" folder already exists
-  command: "govc folder.info /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}" # noqa 301
-  register: folder_exists
-  ignore_errors: yes
+- name: Check if precreated folder exists
+  vmware_folder_info:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    datacenter: "{{ vcenter.datacenter }}"
+    validate_certs: no
+  register: results_folder
 
 - name: Fail if Folder does not exist and create = False
   fail:
     msg: "Folder in vCenter does not exist. create_folder set to False. Please create folder in vCenter."
   when:
-    - folder_exists.rc != 0
+    - vcenter.folder not in results_folder.folder_info.vmFolders.subfolders
     - vcenter.create_folder == False
 
 - name: Create "{{ vcenter.folder }}" in vCenter
-  command: "govc folder.create /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
+  vcenter_folder:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    datacenter: "{{ vcenter.datacenter }}"
+    validate_certs: no
+    folder_name: "{{ vcenter.folder }}"
+    folder_type: vm
+    state: present
   when:
-    - folder_exists.rc != 0
+    - vcenter.folder not in results_folder.folder_info.vmFolders.subfolders
     - vcenter.create_folder == True
 
-- name: Apply openshift-vcenter-level role to vCenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter-level -propagate=false /"
+- name: Apply openshift-vcenter_level role to vCenter
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-vcenter_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: rootFolder
+    object_type: Folder
+    state: present
+    recursive: no
 
 - name: Apply ReadyOnly role to vCenter Datacenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role ReadOnly -propagate=false /{{ vcenter.datacenter }}"
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: ReadOnly
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.datacenter }}"
+    object_type: Datacenter
+    state: present
+    recursive: no
 
-- name: Apply openshift-cluster-level role to vCenter Cluster
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster-level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
+- name: Apply openshift-cluster_level role to vCenter Cluster
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-cluster_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.cluster }}"
+    object_type: ClusterComputeResource
+    state: present
+    recursive: yes
 
-- name: Apply openshift-datastore-level role to vCenter Datastore
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore-level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
+- name: Apply openshift-folder_level role to vCenter Cluster
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-folder_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.folder }}"
+    object_type: Folder
+    state: present
+    recursive: yes
 
-- name: Apply openshift-portgroup-level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup-level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
+- name: Apply openshift-datastore_level role to vCenter Datastore
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-datastore_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.datastore }}"
+    object_type: Datastore
+    state: present
+    recursive: no
 
-- name: Apply openshift-folder-level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-folder-level -propagate=true /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
+- name: Apply openshift-portgroup_level role to vCenter PortGroup
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: openshift-portgroup_level
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.network }}"
+    object_type: Network
+    state: present
+    recursive: no

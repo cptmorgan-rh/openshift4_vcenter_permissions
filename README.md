@@ -4,6 +4,8 @@ OpenShift 4 Minimum vCenter Permissions
 ## Description
 ------------
 
+**Note: This branch uses Ansible Modules. Please switch to the govc branch for the playbook that uses govc**
+
 The ansible playbook in this repository will create and apply the required roles for the minimum permissions required to deploy OpenShift 4 on vCenter. This has been tested with the IPI and UPI methods.
 
 The permissions are obtained from the Official OpenShift Installer Docs on GitHub.
@@ -46,6 +48,7 @@ Due to the two methods used to deploy OpenShift on vCenter you must decide the p
 2. A datacenter created with a vSphere host added to it and a datastore exists that has adequate capacity.
 3. Ansible (preferably latest) on the machine where this repo is cloned.
     1. Before you install Ansible, install the `epel-release`, run `yum -y install epel-release`
+4. PyVmomi installed on your local machine. 
 
 ### Expected Outcome
 
