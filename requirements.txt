@@ -1,0 +1,7 @@
+pyvmomi
+ansible
+urllib3
+openshift>=0.6
+PyYAML>=3.11
+requests
+requests-oauthlib

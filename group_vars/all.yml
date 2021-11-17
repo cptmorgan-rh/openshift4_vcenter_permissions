@@ -6,10 +6,10 @@ vcenter:
   cluster: LAB
   datastore: ds0
   network: 10.0.0.x-24
-  folder: openshift47
+  folder: openshift4
   create_folder: True
 download:
-  govc: https://github.com/vmware/govmomi/releases/download/v0.24.0/govc_linux_amd64.gz
+  govc: https://github.com/vmware/govmomi/releases/download/v0.27.1/govc_Linux_x86_64.tar.gz
 openshift:
   vcenter_svc_account: OCP4Admin@vsphere.local
   installer_created_folder: False

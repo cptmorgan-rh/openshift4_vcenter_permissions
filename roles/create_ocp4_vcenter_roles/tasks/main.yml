@@ -1,68 +1,88 @@
 ---
+- name: Check if openshift-vcenter_level role exists
+  command: "govc role.ls openshift-vcenter_level"
+  register: result_vcenter_level
+  ignore_errors: yes
+
 - name: Create openshift-vcenter_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-vcenter_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ vcenter_level }}"
+  command: "govc role.create openshift-vcenter_level"
+  when: result_vcenter_level.rc != 0
+  ignore_errors: yes
+
+- name: Add Privilege to openshift-vcenter_level role
+  command: "govc role.update -a openshift-vcenter_level {{ item }}"
+  with_items: "{{ vcenter_level }}"
+
+- name: Check if openshift-cluster_level role exists
+  command: "govc role.ls openshift-cluster_level"
+  register: result_cluster_level
+  ignore_errors: yes
 
 - name: Create openshift-cluster_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-cluster_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ cluster_level }}"
+  command: "govc role.create openshift-cluster_level"
+  when: result_cluster_level.rc != 0
+
+- name: Add Privilege to openshift-cluster_level role
+  command: "govc role.update -a openshift-cluster_level {{ item }}"
+  with_items: "{{ cluster_level }}"
+
+- name: Check if openshift-datastore_level role exists
+  command: "govc role.ls openshift-datastore_level"
+  register: result_datastore_level
+  ignore_errors: yes
 
 - name: Create openshift-datastore_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-datastore_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ datastore_level }}"
+  command: "govc role.create openshift-datastore_level"
+  when: result_datastore_level.rc != 0
+
+- name: Add Privilege to openshift-datastore_level role
+  command: "govc role.update -a openshift-datastore_level {{ item }}"
+  with_items: "{{ datastore_level }}"
+
+- name: Check if openshift-portgroup_level role exists
+  command: "govc role.ls openshift-portgroup_level"
+  register: result_portgroup_level
+  ignore_errors: yes
 
 - name: Create openshift-portgroup_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-portgroup_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ portgroup_level }}"
+  command: "govc role.create openshift-portgroup_level"
+  when: result_portgroup_level.rc != 0
+
+- name: Add Privilege to openshift-portgroup_level role
+  command: "govc role.update -a openshift-portgroup_level {{ item }}"
+  with_items: "{{ portgroup_level }}"
+
+- name: Check if openshift-folder_level role exists
+  command: "govc role.ls openshift-folder_level"
+  register: result_folder_level
+  when: openshift.installer_created_folder == False
+  ignore_errors: yes
 
 - name: Create openshift-folder_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-folder_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ folder_level }}"
+  command: "govc role.create openshift-folder_level"
+  when:
+    - openshift.installer_created_folder == False
+    - result_folder_level.rc != 0
+
+- name: Add Privilege to openshift-folder_level role
+  command: "govc role.update -a openshift-folder_level {{ item }}"
+  with_items: "{{ folder_level }}"
   when: openshift.installer_created_folder == False
 
+- name: Check if openshift-datacenter_level role exists
+  command: "govc role.ls openshift-datacenter_level"
+  register: result_datacenter_level
+  ignore_errors: yes
+  when: openshift.installer_created_folder == True
+
 - name: Create openshift-datacenter_level role
-  vmware_local_role_manager:
-    hostname: "{{ vcenter.ip }}"
-    username: "{{ vcenter.admin_username }}"
-    password: "{{ vcenter.admin_password }}"
-    validate_certs: no
-    local_role_name: openshift-datacenter_level
-    local_privilege_ids: [ "{{ item }}" ]
-    state: present
-  loop: "{{ datacenter_level }}"
+  command: "govc role.create openshift-datacenter_level"
+  when:
+    - openshift.installer_created_folder == True
+    - result_datacenter_level.rc != 0
+  ignore_errors: true
+
+- name: Add Privilege to openshift-datacenter_level role
+  command: "govc role.update -a openshift-datacenter_level {{ item }}"
+  with_items: "{{ datacenter_level }}"
   when: openshift.installer_created_folder == True

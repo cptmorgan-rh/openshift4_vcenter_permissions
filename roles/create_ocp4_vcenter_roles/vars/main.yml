@@ -24,6 +24,7 @@ portgroup_level:
   - Network.Assign
 folder_level:
   - Resource.AssignVMToPool
+  - VApp.AssignResourcePool
   - VApp.Import
   - VirtualMachine.Config.AddExistingDisk
   - VirtualMachine.Config.AddNewDisk
@@ -49,8 +50,13 @@ folder_level:
   - VirtualMachine.Inventory.CreateFromExisting
   - VirtualMachine.Inventory.Delete
   - VirtualMachine.Provisioning.Clone
+  - VirtualMachine.Provisioning.MarkAsTemplate
+  - VirtualMachine.Provisioning.CloneTemplate
+  - VirtualMachine.Provisioning.MarkAsVM
+  - VirtualMachine.Provisioning.DeployTemplate
 datacenter_level:
   - Resource.AssignVMToPool
+  - VApp.AssignResourcePool
   - VApp.Import
   - VirtualMachine.Config.AddExistingDisk
   - VirtualMachine.Config.AddNewDisk
@@ -76,5 +82,9 @@ datacenter_level:
   - VirtualMachine.Inventory.CreateFromExisting
   - VirtualMachine.Inventory.Delete
   - VirtualMachine.Provisioning.Clone
+  - VirtualMachine.Provisioning.MarkAsTemplate
+  - VirtualMachine.Provisioning.CloneTemplate
+  - VirtualMachine.Provisioning.MarkAsVM
+  - VirtualMachine.Provisioning.DeployTemplate
   - Folder.Create
   - Folder.Delete

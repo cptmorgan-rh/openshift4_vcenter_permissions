@@ -16,7 +16,7 @@
 
     - name: Create OCP 4 vCenter Role
       import_role:
-        name: create_ocp4_vcenter_role
+        name: create_ocp4_vcenter_roles
 
     - name: Apply OCP 4 vCenter Permissions for precreated VM Folder
       import_role:
