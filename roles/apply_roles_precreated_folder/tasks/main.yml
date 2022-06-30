@@ -32,5 +32,5 @@
 - name: Apply openshift-portgroup_level role to vCenter PortGroup
   command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup_level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
 
-- name: Apply openshift-folder_level role to vCenter PortGroup
+- name: Apply openshift-folder_level role to vCenter Folder
   command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-folder_level -propagate=true /{{ vcenter.datacenter }}/vm/{{ vcenter.folder | quote }}"
