@@ -1,15 +1,15 @@
 ---
 - name: Apply openshift-vcenter_level role to vCenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-vcenter_level -propagate=false /"
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-vcenter_level -propagate=false /"
 
 - name: Apply openshift-datacenter_level role to vCenter Datacenter
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datacenter_level -propagate=true /{{ vcenter.datacenter }}"
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-datacenter_level -propagate=true /{{ vcenter.datacenter }}"
 
 - name: Apply openshift-cluster_level role to vCenter Cluster
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-cluster_level -propagate=true /{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}"
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-cluster_level -propagate=true '/{{ vcenter.datacenter }}/host/{{ vcenter.cluster }}'"
 
 - name: Apply openshift-datastore_level role to vCenter Datastore
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-datastore_level -propagate=false /{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}"
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-datastore_level -propagate=false '/{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}'"
 
 - name: Apply openshift-portgroup_level role to vCenter PortGroup
-  command: "govc permissions.set --principal {{ openshift.vcenter_svc_account }} -role openshift-portgroup_level -propagate=false /{{ vcenter.datacenter }}/network/{{ vcenter.network }}"
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-portgroup_level -propagate=false '/{{ vcenter.datacenter }}/network/{{ vcenter.network }}'"
