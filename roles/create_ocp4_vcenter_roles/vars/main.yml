@@ -10,6 +10,7 @@ vcenter_level:
   - InventoryService.Tagging.EditTag
   - Sessions.ValidateSession
   - StorageProfile.View
+  - StorageProfile.Update
 cluster_level:
   - Host.Config.Storage
   - Resource.AssignVMToPool
@@ -20,6 +21,7 @@ datastore_level:
   - Datastore.AllocateSpace
   - Datastore.Browse
   - Datastore.FileManagement
+  - InventoryService.Tagging.ObjectAttachable
 portgroup_level:
   - Network.Assign
 folder_level:
@@ -54,6 +56,7 @@ folder_level:
   - VirtualMachine.Provisioning.CloneTemplate
   - VirtualMachine.Provisioning.MarkAsVM
   - VirtualMachine.Provisioning.DeployTemplate
+  - InventoryService.Tagging.ObjectAttachable
 datacenter_level:
   - Resource.AssignVMToPool
   - VApp.AssignResourcePool
@@ -88,3 +91,4 @@ datacenter_level:
   - VirtualMachine.Provisioning.DeployTemplate
   - Folder.Create
   - Folder.Delete
+  - InventoryService.Tagging.ObjectAttachable
