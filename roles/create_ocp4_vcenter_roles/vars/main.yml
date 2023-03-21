@@ -21,9 +21,11 @@ datastore_level:
   - Datastore.AllocateSpace
   - Datastore.Browse
   - Datastore.FileManagement
+  - InventoryService.Tagging.ObjectAttachable
 portgroup_level:
   - Network.Assign
 folder_level:
+  - InventoryService.Tagging.ObjectAttachable
   - Resource.AssignVMToPool
   - VApp.AssignResourcePool
   - VApp.Import
@@ -56,6 +58,7 @@ folder_level:
   - VirtualMachine.Provisioning.MarkAsVM
   - VirtualMachine.Provisioning.DeployTemplate
 datacenter_level:
+  - InventoryService.Tagging.ObjectAttachable
   - Resource.AssignVMToPool
   - VApp.AssignResourcePool
   - VApp.Import
