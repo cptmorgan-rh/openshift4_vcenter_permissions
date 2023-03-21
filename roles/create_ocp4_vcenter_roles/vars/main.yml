@@ -10,6 +10,7 @@ vcenter_level:
   - InventoryService.Tagging.EditTag
   - Sessions.ValidateSession
   - StorageProfile.View
+  - StorageProfile.Update
 cluster_level:
   - Host.Config.Storage
   - Resource.AssignVMToPool
