@@ -29,6 +29,9 @@
 - name: Apply openshift-datastore_level role to vCenter Datastore
   command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-datastore_level -propagate=false '/{{ vcenter.datacenter }}/datastore/{{ vcenter.datastore }}'"
 
+- name: Apply ReadOnly role to vCenter Distributed Switch
+  command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role ReadOnly -propagate=false '/{{ vcenter.datacenter }}/network/{{ vcenter.dswitch }}'"
+
 - name: Apply openshift-portgroup_level role to vCenter PortGroup
   command: "govc permissions.set --principal '{{ openshift.vcenter_svc_account }}' -role openshift-portgroup_level -propagate=false '/{{ vcenter.datacenter }}/network/{{ vcenter.network }}'"
 
