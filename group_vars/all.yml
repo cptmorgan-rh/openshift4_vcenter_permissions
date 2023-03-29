@@ -6,6 +6,7 @@ vcenter:
   cluster: LAB
   datastore: ds0
   network: 10.0.0.x-24
+  dswitch: DistributedSwitch
   folder: openshift4
   create_folder: True
 openshift:
