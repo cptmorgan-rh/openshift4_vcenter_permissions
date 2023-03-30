@@ -1,4 +1,12 @@
 ---
+- name: Get vcenter info
+  vmware_about_info:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+  register: vcenter_info
+
 - name: Check if openshift-vcenter_level role exists
   command: "govc role.ls openshift-vcenter_level"
   register: result_vcenter_level
@@ -39,6 +47,11 @@
   command: "govc role.update -a openshift-datastore_level {{ item }}"
   with_items: "{{ datastore_level }}"
 
+- name: Add Privilege to openshift-datastore_level role vc7
+  command: "govc role.update -a openshift-datastore_level {{ item }}"
+  with_items: "{{ datastore_level_vc7 }}"
+  when: vcenter_info.about_info.version.startswith('7.')
+
 - name: Check if openshift-portgroup_level role exists
   command: "govc role.ls openshift-portgroup_level"
   register: result_portgroup_level
@@ -69,6 +82,13 @@
   with_items: "{{ folder_level }}"
   when: openshift.installer_created_folder == False
 
+- name: Add Privilege to openshift-folder_level role vc7
+  command: "govc role.update -a openshift-folder_level {{ item }}"
+  with_items: "{{ folder_level }}"
+  when:
+    - openshift.installer_created_folder == False
+    - vcenter_info.about_info.version.startswith('7.')
+
 - name: Check if openshift-datacenter_level role exists
   command: "govc role.ls openshift-datacenter_level"
   register: result_datacenter_level
@@ -86,3 +106,10 @@
   command: "govc role.update -a openshift-datacenter_level {{ item }}"
   with_items: "{{ datacenter_level }}"
   when: openshift.installer_created_folder == True
+
+- name: Add Privilege to openshift-datacenter_level role vc7
+  command: "govc role.update -a openshift-datacenter_level {{ item }}"
+  with_items: "{{ datacenter_level }}"
+  when:
+    - openshift.installer_created_folder == True
+    - vcenter_info.about_info.version.startswith('7.')
