@@ -1,4 +1,12 @@
 ---
+- name: Get vcenter info
+  vmware_about_info:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+  register: vcenter_info
+
 - name: Create openshift-vcenter-level role
   vmware_local_role_manager:
     hostname: "{{ vcenter.ip }}"
@@ -29,6 +37,17 @@
     local_privilege_ids: "{{ datastore_level }}"
     state: present
 
+- name: Create openshift-datastore_level role vc7
+  vmware_local_role_manager:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    local_role_name: openshift-datastore_level
+    local_privilege_ids: "{{ datastore_level | union(datastore_level_vc7) }}"
+    state: present
+  when: "vcenter_info.about_info.version.startswith('7.')"
+
 - name: Create openshift-portgroup_level role
   vmware_local_role_manager:
     hostname: "{{ vcenter.ip }}"
@@ -48,7 +67,21 @@
     local_role_name: openshift-folder_level
     local_privilege_ids: "{{ folder_level }}"
     state: present
-  when: openshift.installer_created_folder == False
+  when:
+    - openshift.installer_created_folder == False
+
+- name: Create openshift-folder_level role vc7
+  vmware_local_role_manager:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    local_role_name: openshift-folder_level
+    local_privilege_ids: "{{ folder_level | union(folder_level_vc7) }}"
+    state: present
+  when:
+    - openshift.installer_created_folder == False
+    - vcenter_info.about_info.version.startswith('7.')
 
 - name: Create openshift-datacenter_level role
   vmware_local_role_manager:
@@ -59,4 +92,18 @@
     local_role_name: openshift-datacenter_level
     local_privilege_ids: "{{ datacenter_level }}"
     state: present
-  when: openshift.installer_created_folder == True
+  when:
+    - openshift.installer_created_folder == True
+
+- name: Create openshift-datacenter_level role vc7
+  vmware_local_role_manager:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    local_role_name: openshift-datacenter_level
+    local_privilege_ids: "{{ datacenter_level | union(datacenter_level_vc7) }}"
+    state: present
+  when:
+    - openshift.installer_created_folder == True
+    - vcenter_info.about_info.version.startswith('7.')

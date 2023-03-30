@@ -94,6 +94,19 @@
     state: present
     recursive: no
 
+- name: Apply ReadyOnly role to vCenter Switch
+  vmware_object_role_permission:
+    hostname: "{{ vcenter.ip }}"
+    username: "{{ vcenter.admin_username }}"
+    password: "{{ vcenter.admin_password }}"
+    validate_certs: no
+    role: ReadOnly
+    principal: "{{ openshift.vcenter_svc_account }}"
+    object_name: "{{ vcenter.dswitch }}"
+    object_type: DistributedVirtualPortgroup
+    state: present
+    recursive: no
+
 - name: Apply openshift-portgroup_level role to vCenter PortGroup
   vmware_object_role_permission:
     hostname: "{{ vcenter.ip }}"

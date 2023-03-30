@@ -21,6 +21,7 @@ datastore_level:
   - Datastore.AllocateSpace
   - Datastore.Browse
   - Datastore.FileManagement
+datastore_level_vc7:
   - InventoryService.Tagging.ObjectAttachable
 portgroup_level:
   - Network.Assign
@@ -56,6 +57,7 @@ folder_level:
   - VirtualMachine.Provisioning.CloneTemplate
   - VirtualMachine.Provisioning.MarkAsVM
   - VirtualMachine.Provisioning.DeployTemplate
+folder_level_vc7:
   - InventoryService.Tagging.ObjectAttachable
 datacenter_level:
   - Resource.AssignVMToPool
@@ -91,4 +93,5 @@ datacenter_level:
   - VirtualMachine.Provisioning.DeployTemplate
   - Folder.Create
   - Folder.Delete
+datacenter_level_vc7:
   - InventoryService.Tagging.ObjectAttachable
